@@ -4,7 +4,7 @@
 
 - Source: [shawalkabirchy/AssetSanitize](https://github.com/shawalkabirchy/AssetSanitize)
 - Studio: [consolelog.studio](https://consolelog.studio/)
-- Live demo: awaiting Cloudflare Pages authorization; see [deployment](docs/deployment.md).
+- Live demo: deployment is pending at the owner's request. Run the complete app locally using the commands below; see [deployment](docs/deployment.md) when ready to publish.
 - [Case study](docs/case-study.md) · [Verification](docs/verification.md) · [LinkedIn drafts](docs/linkedin-drafts.md)
 
 ## Run locally

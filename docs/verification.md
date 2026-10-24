@@ -6,7 +6,7 @@ The separate Browser plugin/skill is not installed. Automated checks use the app
 
 Evidence locations: tests/unit/image.test.ts, tests/e2e/proof.spec.ts, tests/e2e/workflow.spec.ts; portfolio screenshots, environment.json, and walkthrough.webm. The test-only cancellation delay delays real worker delivery to make an otherwise hardware-dependent timing check deterministic; it does not fabricate a cleaned result.
 
-Cloudflare Pages publication and deployed verification are currently pending the missing Pages OAuth scope. Real Safari is not available on this Windows machine; WebKit automation is recorded separately.
+Cloudflare Pages publication and deployed verification are **deferred at the owner's request**. The saved login also lacks the Pages OAuth scope, and was left unchanged. Real Safari is not available on this Windows machine; WebKit automation is recorded separately.
 
 ## Acceptance results
 

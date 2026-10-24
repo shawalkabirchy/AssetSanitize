@@ -4,6 +4,8 @@ The application exports a static `out/` directory. It has no Pages Functions, Wo
 
 ## Current access status
 
+The owner requested **Keep deployment pending** on 25 October 2026. No Cloudflare credentials were refreshed and no Pages resources were created. The complete application and portfolio materials are available locally and in the public GitHub repository. Resume the steps below only when publication is requested.
+
 GitHub authentication was verified. The existing Cloudflare OAuth login was checked with Wrangler 4.152.0. It is missing `pages:write`; listing Pages projects returned authentication error 10000. No Pages project or deployment has been created by this build yet. The owner must authorize Pages access before publication can finish.
 
 ## Deploy after authorization
