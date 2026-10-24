@@ -1,0 +1,27 @@
+{
+  "capturedAt": "2026-10-24T20:54:08.643Z",
+  "timeZone": "Asia/Dhaka",
+  "baseUrl": "http://127.0.0.1:4173",
+  "node": "v24.14.0",
+  "os": "win32 10.0.26200 x64",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "logicalCpus": 12,
+  "memoryGiB": 16,
+  "browsers": {
+    "chromium": "156.0.8078.4",
+    "firefox": "157.0",
+    "webkit": "27.2",
+    "chrome": "156.0.8078.47",
+    "edge": "156.0.4314.42"
+  },
+  "desktopViewport": "1440 × 1000",
+  "mobileViewport": "360 × 800",
+  "sample": {
+    "fixture": "public/samples/studio-sample.jpg",
+    "inputBytes": 31098,
+    "outputBytes": 202794,
+    "clickToVerifiedMs": 146,
+    "note": "Single observed walkthrough run, including automation overhead; not a performance benchmark."
+  },
+  "applicationErrors": []
+}
