@@ -6,7 +6,7 @@ The separate Browser plugin/skill is not installed. Automated checks use the app
 
 Evidence locations: tests/unit/image.test.ts, tests/e2e/proof.spec.ts, tests/e2e/workflow.spec.ts; portfolio screenshots, environment.json, and walkthrough.webm. The test-only cancellation delay delays real worker delivery to make an otherwise hardware-dependent timing check deterministic; it does not fabricate a cleaned result.
 
-Cloudflare Pages publication and deployed verification are **deferred at the owner's request**. The saved login also lacks the Pages OAuth scope, and was left unchanged. Real Safari is not available on this Windows machine; WebKit automation is recorded separately.
+Published to **https://assetsanitize.pages.dev/** on 26 October 2026 (Asia/Dhaka). The production deployment passed **all 35 browser checks**, with zero skipped, unexpected, or flaky results. Local build, TypeScript, and all 18 unit checks were rerun successfully. The connected Cloudflare plugin handled publication; the separate saved Wrangler login was unchanged. Real Safari is not available on this Windows machine; WebKit automation is recorded separately.
 
 ## Acceptance results
 
@@ -24,7 +24,7 @@ Cloudflare Pages publication and deployed verification are **deferred at the own
 | G-A4 | No image upload or runtime telemetry in observed flows | Passed | Network assertions, source review, in-app console review |
 | G-A5 | Bounded sequential work, isolated failure, cancellation and cleanup | Passed | Mixed-batch, cancel/retry, late-reply tests |
 | G-A6 | Commands, browser versions, hardware and observations recorded | Passed | acceptance.json; environment.json; this report |
-| Deployed provider | Actual HTTPS assets, worker, headers and complete workflow | Not run | Pages authorization required |
+| Deployed provider | Actual HTTPS assets, worker, headers and complete workflow | Passed | deployed-acceptance.json; deployed-smoke.json; deployed-headers.json; deployed desktop/mobile screenshots |
 | Real Safari | Actual desktop/iOS Safari | Not run | No Apple browser/device available |
 
 ## Commands and environment
@@ -42,4 +42,18 @@ The production preview was http://127.0.0.1:4173. The in-app browser additionall
 - [Desktop inspection](portfolio/desktop-inspection.png), [desktop result](portfolio/desktop-result.png), [360px result](portfolio/mobile-result.png), [walkthrough](portfolio/walkthrough.webm).
 - [Encoder review](encoder-review.md): narrow handling of Firefox/WebKit encoder additions, with the original download allowlist unchanged. Explicit tab indices fix WebKit skip/download-link focus.
 
-Known limits: actual Safari and deployed-provider behavior remain unverified. Input caps cannot guarantee available memory. Canvas reconstruction can increase size and change bit-depth/color interpretation. No anonymity, secure-erasure, certification, or visible-redaction claim is made.
+## Deployed release evidence — 26 October 2026
+
+The initial production deployment `bc6a3627-2293-47ae-93c2-fb08c3bcff4f` built Git commit `7df38888903254bf3506641a70d0a154704ba702`. Cloudflare reported a successful production deploy with `uses_functions: false`. The stable address is https://assetsanitize.pages.dev/; the deployment address is https://bc6a3627.assetsanitize.pages.dev.
+
+The existing suite was run with `BASE_URL=https://assetsanitize.pages.dev` and `npm run test:e2e -- --reporter=list,json`. It exercised Chromium, Firefox, WebKit, installed Chrome, and installed Edge against the HTTPS host. The test runner sent synthetic files only to browser file inputs; selected image bytes were processed locally.
+
+- [Raw deployed browser results](portfolio/deployed-acceptance.json): 35 passed, zero skipped/unexpected/flaky.
+- [Live smoke evidence](portfolio/deployed-smoke.json): sample inspection, two actual worker instances from the same-origin worker chunk, independent ExifReader inspection of the 202,794-byte `cleaned-01.png` download, clear/reload, and 360px/1440px screenshots. All 23 observed page requests were same-origin GETs without bodies, and no console warnings/errors were recorded.
+- [Public response headers](portfolio/deployed-headers.json): HTTPS 200, CSP, nosniff, no-referrer, framing denial, and disabled camera/microphone/geolocation permissions. Cloudflare also adds CDN network-error reporting headers; no Web Analytics script is enabled.
+- [Deployed environment](portfolio/deployed-environment.json): measured browser versions and hardware for this release.
+- [Live desktop](portfolio/deployed-desktop.png) and [live mobile](portfolio/deployed-mobile.png): the actual published result state, visually reviewed with no clipping or page-level horizontal overflow.
+
+Favicon, synthetic sample, license notices, application chunks, and worker chunks loaded successfully from the production origin. The separate Browser plugin was unavailable, so the existing Playwright workflow provided automation and screenshots.
+
+Known limits: actual Safari remains unverified. Input caps cannot guarantee available memory. Canvas reconstruction can increase size and change bit-depth/color interpretation. No anonymity, secure-erasure, certification, or visible-redaction claim is made.

@@ -4,7 +4,7 @@
 
 - Source: [shawalkabirchy/AssetSanitize](https://github.com/shawalkabirchy/AssetSanitize)
 - Studio: [consolelog.studio](https://consolelog.studio/)
-- Live demo: deployment is pending at the owner's request. Run the complete app locally using the commands below; see [deployment](docs/deployment.md) when ready to publish.
+- Live demo: [assetsanitize.pages.dev](https://assetsanitize.pages.dev/). See [deployment](docs/deployment.md) for build settings and release instructions.
 - [Case study](docs/case-study.md) · [Verification](docs/verification.md) · [LinkedIn drafts](docs/linkedin-drafts.md)
 
 ## Run locally

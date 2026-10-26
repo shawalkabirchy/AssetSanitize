@@ -44,4 +44,4 @@ See the [acceptance report](verification.md) for commands, actual results, brows
 
 The tool does not remove visible text, faces, or identifying scene content. Output can be larger, high-bit-depth/color interpretation can change, and device memory remains a practical constraint. Unsupported or unverifiable files fail visibly.
 
-Source: [GitHub](https://github.com/shawalkabirchy/AssetSanitize). Live demo will be added after Cloudflare Pages authorization and deployed verification. [Discuss a workflow with ConsoleLog Studio](https://consolelog.studio/).
+Try the [live demo](https://assetsanitize.pages.dev/) or read the [source on GitHub](https://github.com/shawalkabirchy/AssetSanitize). [Discuss a workflow with ConsoleLog Studio](https://consolelog.studio/).

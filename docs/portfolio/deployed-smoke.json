@@ -1,0 +1,38 @@
+{
+  "url": "https://assetsanitize.pages.dev",
+  "checkedAt": "2026-10-26T13:56:10.926Z",
+  "browser": "156.0.8078.4",
+  "viewports": [
+    1440,
+    360
+  ],
+  "workerUrls": [
+    "https://assetsanitize.pages.dev/_next/static/chunks/52.75c753d6185a48f3.js",
+    "https://assetsanitize.pages.dev/_next/static/chunks/52.75c753d6185a48f3.js"
+  ],
+  "outputBytes": 202794,
+  "filename": "cleaned-01.png",
+  "assets": [
+    {
+      "path": "/favicon.svg",
+      "status": 200,
+      "contentType": "image/svg+xml"
+    },
+    {
+      "path": "/samples/studio-sample.jpg",
+      "status": 200,
+      "contentType": "image/jpeg"
+    },
+    {
+      "path": "/third-party-notices.txt",
+      "status": 200,
+      "contentType": "text/plain; charset=utf-8"
+    }
+  ],
+  "requestCount": 23,
+  "crossOriginRequests": 0,
+  "consoleErrors": [],
+  "securityHeaders": "passed",
+  "sampleDownload": "passed",
+  "clearAndReload": "passed"
+}

@@ -2,13 +2,26 @@
 
 The application exports a static `out/` directory. It has no Pages Functions, Workers API, D1 binding, or secrets. Hosting target: Cloudflare Pages Free and its provider subdomain.
 
-## Current access status
+## Production site
 
-The owner requested **Keep deployment pending** on 25 October 2026. No Cloudflare credentials were refreshed and no Pages resources were created. The complete application and portfolio materials are available locally and in the public GitHub repository. Resume the steps below only when publication is requested.
+Published on 26 October 2026 (Asia/Dhaka), after the owner requested deployment. Production URL: **https://assetsanitize.pages.dev/**. Cloudflare project: `assetsanitize`.
 
-GitHub authentication was verified. The existing Cloudflare OAuth login was checked with Wrangler 4.152.0. It is missing `pages:write`; listing Pages projects returned authentication error 10000. No Pages project or deployment has been created by this build yet. The owner must authorize Pages access before publication can finish.
+The connected Cloudflare plugin created the project and linked the existing public GitHub repository. The separate saved Wrangler login was left unchanged. No paid resources, application server, Pages Functions, analytics integration, or secrets were added.
 
-## Deploy after authorization
+## Automatic deployment
+
+Push to `main` in [shawalkabirchy/AssetSanitize](https://github.com/shawalkabirchy/AssetSanitize). Cloudflare builds and publishes that branch with:
+
+- Build command: `npm run build`
+- Output directory: `out`
+- Root directory: `/`
+- Build environment: `NODE_VERSION=24.14.0`
+- Preview branch deployments: disabled
+- Web Analytics: disabled
+
+The initial verified production deployment is `bc6a3627-2293-47ae-93c2-fb08c3bcff4f`, built from `7df38888903254bf3506641a70d0a154704ba702`. Its immutable URL is https://bc6a3627.assetsanitize.pages.dev. Verification evidence is recorded in [verification.md](verification.md).
+
+## Local release checks and manual deployment
 
 ```sh
 npm ci
@@ -16,19 +29,18 @@ npm test
 npm run build
 npm run test:e2e
 npx wrangler@4.152.0 login --scopes user:read account:read pages:write
-npx wrangler@4.152.0 pages project create assetsanitize --production-branch main
 npx wrangler@4.152.0 pages deploy out --project-name assetsanitize --branch main
 ```
 
-If `assetsanitize` is unavailable, use `consolelog-assetsanitize` consistently in the create/deploy commands. Use the deployment URL returned by Cloudflare; do not claim an unverified URL is live. Confirm the account and Free plan before creating the project. Do not enable paid resources.
+Wrangler authentication is only needed for manual uploads. The existing Git integration handles normal deployments without a local Cloudflare login. Use the URL returned by Cloudflare and verify it before recording a release. Keep the site on static Pages hosting and do not enable paid resources.
 
-Alternatively connect the public GitHub repository in Pages, choose the static Next.js export preset, use `npm run build`, and publish `out`. Pin Node 24.14.0 in build settings. The app deliberately uses Webpack in both development and production.
+The app deliberately uses Webpack in both development and production. There is no `next start` server or Next.js runtime adapter in the deployed site.
 
 `public/_headers` ships with the static export. It disables framing, MIME sniffing, referrers, camera/microphone/geolocation permissions, forms, and cross-origin content/connection sources. Inline script/style permissions are required by the Next.js static shell. Same-origin connections remain available for the sample. Disable any provider-injected analytics or script integrations.
 
 ## Release check
 
-Open the actual HTTPS URL on desktop and a 360px viewport. Load the sample, inspect its identifying tags, clean it, download the verified PNG, and independently check that output. Inspect network requests and response security headers. Confirm worker chunks, favicon, sample, and license notices load from the same origin. Clear and reload the page. Record actual deployment URL and results in verification.md and replace the README's pending-demo line.
+Open the actual HTTPS URL on desktop and a 360px viewport. Load the sample, inspect its identifying tags, clean it, download the verified PNG, and independently check that output. Inspect network requests and response security headers. Confirm worker chunks, favicon, sample, and license notices load from the same origin. Clear and reload the page. Record the actual deployment URL and results in verification.md and keep the README demo link current.
 
 ## Rollback
 

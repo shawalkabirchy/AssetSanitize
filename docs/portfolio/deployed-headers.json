@@ -1,0 +1,23 @@
+{
+  "url": "https://assetsanitize.pages.dev/",
+  "checked_at": "2026-10-26T13:53:19.7194298Z",
+  "status": 200,
+  "headers": {
+    "permissions-policy": "camera=(), microphone=(), geolocation=()",
+    "Access-Control-Allow-Origin": "*",
+    "Nel": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}",
+    "Content-Type": "text/html; charset=utf-8",
+    "Server": "cloudflare",
+    "Alt-Svc": "h3=\":443\"",
+    "X-Frame-Options": "DENY",
+    "ETag": "W/\"b47ccc8e3ed3648192d9261d7b53d40c\"",
+    "Referrer-Policy": "no-referrer",
+    "Date": "Mon, 26 Oct 2026 13:53:20 GMT",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, must-revalidate, max-age=0",
+    "CF-RAY": "a509f2559d0ce893-CGP",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; worker-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'",
+    "Connection": "keep-alive",
+    "Report-To": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=1CINbvTfbgQXrW3pR5GQb06wpDlXEb0BpQl1%2B4nxPOd1WuAQaj5wun36gKuDXGDGqPFHH%2FLNXK49jMSoAkNKnUBkvERWJMVxHsFYTpShUstZxEl%2B9fdDCatL895QJB4f%2BI4ly3fYWPiLeQ%3D%3D\"}]}"
+  }
+}
