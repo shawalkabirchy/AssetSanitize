@@ -14,3 +14,12 @@ export const STATUS_LABELS: Record<FileStatus, string> = {
   failed: "Needs attention",
   cancelled: "Cancelled",
 };
+
+/** "6.5×" for an output that grew; one decimal, no trailing ".0". */
+export function formatGrowth(output: number, input: number) {
+  return `${Number((output / input).toFixed(1))}×`;
+}
+
+export function plural(count: number, one: string, many = `${one}s`) {
+  return `${count} ${count === 1 ? one : many}`;
+}

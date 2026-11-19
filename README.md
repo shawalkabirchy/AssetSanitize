@@ -9,7 +9,7 @@
 
 ## Run locally
 
-Reference development environment: Node **24.14.0**, npm **11.14.1**. Versions of Next.js, React, Tailwind, exifr, and test tools are pinned in package.json and package-lock.json. No API keys or paid accounts are needed locally.
+Reference development environment: Node **24.14.0**, npm **11.14.1**. Versions of Next.js, React, Tailwind, exifr, fflate, the IBM Plex fonts, and test tools are pinned in package.json and package-lock.json. No API keys or paid accounts are needed locally.
 
 ```sh
 npm ci
@@ -46,8 +46,10 @@ Playwright starts a production preview on 127.0.0.1:4173, or reuses an existing 
 - Signatures and header dimensions are checked before preview/full decoding. Animated PNG, SVG (including renamed SVG), corrupt structures, and excessive dimensions are rejected.
 - EXIF, GPS, XMP and IPTC inspection uses exifr with explicit options. PNG textual fields are reported too; compressed text is identified without claiming to expand it. “Not detected” means this reader found no recognized fields, not proof that arbitrary source data is absent.
 - Metadata failures show **Unable to inspect**. Reconstruction/verification failures never enable download.
-- Downloads are `cleaned-01.png`, `cleaned-02.png`, etc. Original filenames stay in the local UI.
-- Clean images processes ready files sequentially. Cancel preserves verified results; Retry re-inspects failed/cancelled files. Remove releases one file. Clear all and refresh reset the session.
+- Images can be chosen, dropped anywhere on the page, or pasted from the clipboard. A drop outside the upload box never makes the browser open the file and discard the session.
+- Downloads are `cleaned-01.png`, `cleaned-02.png`, etc. Original filenames stay in the local UI, where each result shows the source it came from.
+- With two or more results, Download all saves `assetsanitize-cleaned.zip`. PNGs are stored, not recompressed, and every entry carries a fixed 1980 date, so the archive does not record when it was made.
+- Clean images processes ready files sequentially and shows which one is running (“Cleaning 2 of 5…”). Cancel preserves verified results; Retry re-inspects failed/cancelled files. Remove releases one file. Clear all and refresh reset the session.
 - Try a sample adds a clearly synthetic photo with demonstration author, GPS, serial, and capture-time tags. It never replaces existing images.
 
 This removes **source metadata**, not visible text, faces, addresses, or other identifying picture content. It does not anonymize an image or guarantee it is safe to publish. Re-encoding can increase file size, discard high bit depth, and change color-profile interpretation. It is not a metadata-only archival edit.
@@ -74,4 +76,4 @@ Clear all revokes object URLs, terminates the worker, and drops references. This
 
 Project code and synthetic fixtures: [MIT](LICENSE), as approved by the owner. Dependency notices are retained in [public/third-party-notices.txt](public/third-party-notices.txt) and regenerated at build time. The design concept is generated with the built-in Image Gen tool; actual product screenshots and walkthrough show the built application.
 
-The runtime is static and requires no paid processing API. Cloudflare Pages deployment uses its free plan and free subdomain; quotas and terms must be checked at deployment. No paid resource, custom domain purchase, or optional analytics is enabled by this project. The original multi-project planning brief remains local and is excluded from the public repository.
+The runtime is static and requires no paid processing API. Fonts (IBM Plex Sans and Mono, OFL) are bundled and served from the application origin. Cloudflare Pages deployment uses its free plan; quotas and terms must be checked at deployment. No paid resource, custom domain purchase, or optional analytics is enabled by this project. The original multi-project planning brief remains local and is excluded from the public repository.

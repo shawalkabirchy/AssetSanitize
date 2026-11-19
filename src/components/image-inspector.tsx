@@ -1,23 +1,16 @@
 "use client";
 import {
   CircleAlert,
-  FileImage,
+  CircleCheck,
   ImageIcon,
   RotateCcw,
   Trash2,
 } from "lucide-react";
 import type { ImageEntry } from "@/hooks/use-image-queue";
-import { formatBytes, STATUS_LABELS } from "@/lib/display";
+import { formatBytes, plural, STATUS_LABELS } from "@/lib/display";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 
 export function ImageInspector({
   entry,
@@ -25,33 +18,18 @@ export function ImageInspector({
   onRetry,
   onRemove,
 }: {
-  entry?: ImageEntry;
+  entry: ImageEntry;
   busy: boolean;
   onRetry: (id: string) => void;
   onRemove: (id: string) => void;
 }) {
-  if (!entry)
-    return (
-      <div className="inspector inspector-empty">
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <FileImage aria-hidden="true" />
-            </EmptyMedia>
-            <EmptyTitle>A closer look at your image.</EmptyTitle>
-            <EmptyDescription>
-              Select an image to preview it and see the metadata it carries.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      </div>
-    );
   const dimensions = entry.resultWidth
     ? `${entry.resultWidth} × ${entry.resultHeight}`
     : entry.info
       ? `${entry.info.width} × ${entry.info.height}`
       : undefined;
   const retryable = entry.status === "failed" || entry.status === "cancelled";
+  const fieldCount = entry.inspection?.count ?? 0;
   return (
     <div className="inspector" aria-label="Selected image">
       <div className="inspector-heading">
@@ -136,9 +114,21 @@ export function ImageInspector({
           <div className="metadata-heading">
             <h3 id="metadata-heading">Source metadata</h3>
             {entry.inspection ? (
-              <Badge variant="secondary">{entry.inspection.count} fields</Badge>
+              <Badge variant="secondary">
+                {plural(fieldCount, "field")} found
+              </Badge>
             ) : null}
           </div>
+          {entry.status === "done" ? (
+            <p className="verified-row">
+              <CircleCheck aria-hidden="true" />
+              <span>
+                {fieldCount
+                  ? `Verified: none of ${fieldCount === 1 ? "this field is" : `these ${fieldCount} fields are`} in the cleaned PNG.`
+                  : "Verified: the cleaned PNG passed the structure and metadata checks."}
+              </span>
+            </p>
+          ) : null}
           {entry.inspectionOutcome === "unable-to-inspect" ? (
             <p className="metadata-message">
               Unable to inspect. This does not mean the image has no metadata.
@@ -156,7 +146,10 @@ export function ImageInspector({
             >
               {entry.inspection.groups.map((group) => (
                 <div className="metadata-group" key={group.title}>
-                  <h4>{group.title}</h4>
+                  <h4>
+                    {group.title}{" "}
+                    <span>{group.fields.length}</span>
+                  </h4>
                   <dl>
                     {group.fields.map((field, index) => (
                       <div
@@ -178,12 +171,6 @@ export function ImageInspector({
                 : "Recognized fields will appear after inspection."}
             </p>
           )}
-          {entry.status === "done" ? (
-            <p className="verification-note">
-              Output verified. These source fields were not carried into your
-              PNG.
-            </p>
-          ) : null}
         </section>
       </div>
     </div>

@@ -68,3 +68,26 @@ Known limits: actual Safari remains unverified. Input caps cannot guarantee avai
 - The HTML is byte-identical to `https://assetsanitize.pages.dev/` (same SHA-256), so both hosts serve the same deployment.
 
 The 35-check browser suite was not rerun against the custom domain.
+
+## UI/UX revision — 19 November 2026
+
+Branch `ui-ux-refresh`. The changes are described in [design.md](design.md#revision--19-november-2026). Results below are from the static export served locally at `127.0.0.1:4273`, because another local project held port 4173 during this session.
+
+- **TypeScript:** passed. **Unit:** 21 passed. New checks cover plain metadata labels, merged coordinates, altitude formatting and the Download all archive (entries stored unchanged under generic names).
+- **Browser:** 55 passed, 1 skipped, across Chromium, Firefox and WebKit, plus `proof.spec.ts` in installed Chrome and Edge. The new `tests/e2e/ux.spec.ts` covers:
+  - a drop outside the upload box: the file is added and the page does not navigate;
+  - a drop while images are processing: refused with a reason;
+  - a clipboard paste;
+  - one filled main button in each state, with axe WCAG 2 A/AA and 2.1 AA scans of both finished states;
+  - Download all: every PNG in the zip is re-checked with `verifyPng` and ExifReader;
+  - the "Cleaning 2 of 3…" progress line;
+  - the phone action bar staying at the bottom of the viewport.
+- **Skipped:** the clipboard paste test in Firefox. Firefox empties `clipboardData` on a scripted paste event, so the test cannot hand it a file; a real paste carries the file.
+- **Test change:** the cancellation test's worker delay went from 1 s to 4 s. With tracing on, WebKit's click (including the new 140 ms hover step) needed more than the old 1 s window. The app was not changed for this.
+- **Text-size scan** at 1440, 1024, 820 and 390px in the empty, ready and finished states: no visible text under 13px, no horizontal overflow, no page errors. Both IBM Plex faces load from the application origin.
+- **taste-skill `perf.mjs`:** 0 FAIL, 4 WARN. The warnings are a busy host CPU, plus 548 KiB of parsed JavaScript from Next.js/React, which was already there. Layout shift 0.000; one 44.8 KiB font file at load.
+- **taste-skill `consistency.mjs`** (software profile, 1440 and 390px):
+  - Fixed: the text-contrast findings (sentences now use `--ink-soft`, 7.7:1) and the nav-edge finding.
+  - Remaining FAILs are marketing-page structure rules (hero screen, section heights, one section per screen, hero call to action, the kit's own container markup) that a single-screen tool does not follow.
+  - The h1 check wants a category noun; the owner chose "Remove EXIF and GPS data from photos".
+- **`npm run build`:** the export completes. Next.js 16.4.3 then exits with code 1 (`SecurityFatalError`) because of a published advisory concerning `use cache`, which this app does not use. `npm audit` lists 16.4.6 as the fix. Until Next is upgraded, the build command, and a Cloudflare build, report failure even though `out/` is written.

@@ -156,8 +156,9 @@ test("cancel keeps the first verified file and retry completes the second", asyn
     window.Worker = class extends NativeWorker {
       postMessage(message: { operation: string; file: File }) {
         // Delay delivery, never fake a worker result: cancellation remains deterministic on fast hardware.
+        // 4 s leaves room for WebKit's traced click (hover step included) before the delayed result lands.
         if (message.operation === "clean" && message.file.name === "second.jpg")
-          setTimeout(() => super.postMessage(message), 1000);
+          setTimeout(() => super.postMessage(message), 4000);
         else super.postMessage(message);
       }
     };

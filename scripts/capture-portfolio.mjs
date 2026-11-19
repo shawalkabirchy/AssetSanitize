@@ -21,7 +21,7 @@ const base = process.env.DEMO_URL ?? "http://127.0.0.1:4173";
 const pause = (milliseconds) => page.waitForTimeout(milliseconds); // Presentation pacing, not test synchronization.
 await page.goto(base);
 await page
-  .getByRole("heading", { name: "Share the image. Leave the metadata." })
+  .getByRole("heading", { name: "Remove EXIF and GPS data from photos" })
   .waitFor();
 await page.screenshot({ path: `${output}/desktop-empty.png`, fullPage: true });
 await pause(4000);
@@ -61,7 +61,9 @@ const source = await readFile("public/samples/studio-sample.jpg");
 const result = await readFile(await download.path());
 await pause(4000);
 await page.getByRole("button", { name: "Clear all", exact: true }).click();
-await page.getByText("A closer look at your image.", { exact: true }).waitFor();
+await page
+  .getByRole("heading", { name: "Drop JPEG or PNG images here" })
+  .waitFor();
 await pause(5000);
 await page.close();
 await context.close();
@@ -83,6 +85,11 @@ assert(
   ),
   "The mobile workflow must not overflow horizontally.",
 );
+// A full-page capture draws the sticky phone action bar where the 800px viewport ends, over the
+// preview. For this one still, show it in the slot it settles into at the end of the workspace.
+await mobile.addStyleTag({
+  content: ".action-bar { position: static !important; }",
+});
 await mobile.screenshot({
   path: `${output}/mobile-result.png`,
   fullPage: true,

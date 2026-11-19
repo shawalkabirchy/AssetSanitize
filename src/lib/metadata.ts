@@ -28,6 +28,79 @@ function groupFor(key: string) {
   return 4;
 }
 
+// Plain names for the tags people most often need to recognize. Anything else falls back to humanize().
+const LABELS: Record<string, string> = {
+  GPSLatitude: "Latitude",
+  GPSLongitude: "Longitude",
+  GPSAltitude: "Altitude",
+  GPSTimeStamp: "GPS time",
+  GPSDateStamp: "GPS date",
+  GPSImgDirection: "Camera direction",
+  GPSSpeed: "Speed",
+  Make: "Camera maker",
+  Model: "Camera model",
+  BodySerialNumber: "Camera serial number",
+  SerialNumber: "Serial number",
+  InternalSerialNumber: "Serial number",
+  CameraOwnerName: "Camera owner",
+  OwnerName: "Camera owner",
+  LensMake: "Lens maker",
+  LensModel: "Lens",
+  LensSerialNumber: "Lens serial number",
+  ExposureTime: "Exposure time",
+  FNumber: "F-number",
+  FocalLength: "Focal length",
+  ISO: "ISO",
+  DateTimeOriginal: "Taken",
+  CreateDate: "Created",
+  ModifyDate: "Modified",
+  OffsetTime: "Time zone",
+  OffsetTimeOriginal: "Time zone when taken",
+  OffsetTimeDigitized: "Time zone when created",
+  ImageDescription: "Description",
+  UserComment: "Comment",
+  ExifImageWidth: "Width",
+  ExifImageHeight: "Height",
+  YCbCrPositioning: "YCbCr positioning",
+};
+
+/** "GPSLatitudeRef" → "GPS latitude ref": split words and acronyms, sentence case. */
+export function humanize(key: string) {
+  const words = key
+    .replaceAll("_", " ")
+    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
+    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
+    .split(/\s+/)
+    .filter(Boolean);
+  return words
+    .map((word, index) =>
+      index === 0
+        ? word[0].toUpperCase() + word.slice(1)
+        : /^[A-Z0-9]+$/.test(word)
+          ? word
+          : word[0].toLowerCase() + word.slice(1),
+    )
+    .join(" ");
+}
+
+function isNumberTriple(value: unknown): value is [number, number, number] {
+  return (
+    Array.isArray(value) &&
+    value.length === 3 &&
+    value.every((item) => typeof item === "number" && Number.isFinite(item))
+  );
+}
+
+/** [23, 48, 36.12] and "N" → "23° 48′ 36.12″ N". */
+export function formatCoordinate(value: unknown, ref: unknown) {
+  if (!isNumberTriple(value)) return undefined;
+  const [degrees, minutes, seconds] = value;
+  const direction = typeof ref === "string" && /^[NSEW]$/.test(ref) ? ` ${ref}` : "";
+  return `${degrees}° ${minutes}′ ${Number(seconds.toFixed(2))}″${direction}`;
+}
+
+const EXIF_DATE = /^(\d{4}):(\d{2}):(\d{2})([ T]\d{2}:\d{2}:\d{2})?$/;
+
 export function groupMetadata(raw: Record<string, unknown>): Inspection {
   const groups = GROUPS.map((title) => ({
     title,
@@ -35,11 +108,32 @@ export function groupMetadata(raw: Record<string, unknown>): Inspection {
   }));
   function visit(data: Record<string, unknown>, depth = 0) {
     if (depth > 3) return;
+    // Coordinates read better as one value with their hemisphere. exifr's derived decimal
+    // latitude/longitude repeat the same tags, so they are not listed twice.
+    const merged = new Map<string, string>();
+    const skipped = new Set<string>();
+    for (const axis of ["Latitude", "Longitude"]) {
+      const formatted = formatCoordinate(data[`GPS${axis}`], data[`GPS${axis}Ref`]);
+      if (formatted === undefined) continue;
+      merged.set(`GPS${axis}`, formatted);
+      skipped.add(`GPS${axis}Ref`).add(axis.toLowerCase());
+    }
+    if (typeof data.GPSAltitude === "number" && Number.isFinite(data.GPSAltitude)) {
+      const below = data.GPSAltitudeRef === 1;
+      if (data.GPSAltitudeRef === 0 || below) {
+        merged.set(
+          "GPSAltitude",
+          `${Number(data.GPSAltitude.toFixed(1))} m ${below ? "below" : "above"} sea level`,
+        );
+        skipped.add("GPSAltitudeRef");
+      }
+    }
     for (const [key, value] of Object.entries(data)) {
       if (
         value == null ||
         value instanceof Uint8Array ||
-        value instanceof ArrayBuffer
+        value instanceof ArrayBuffer ||
+        skipped.has(key)
       )
         continue;
       if (
@@ -51,7 +145,11 @@ export function groupMetadata(raw: Record<string, unknown>): Inspection {
         continue;
       }
       let text: string;
-      if (value instanceof Date)
+      const exifDate = typeof value === "string" ? EXIF_DATE.exec(value) : null;
+      if (merged.has(key)) text = merged.get(key)!;
+      else if (exifDate)
+        text = `${exifDate[1]}-${exifDate[2]}-${exifDate[3]}${exifDate[4]?.replace("T", " ") ?? ""}`;
+      else if (value instanceof Date)
         text = Number.isNaN(value.getTime())
           ? "Unrecognized date"
           : value
@@ -68,9 +166,7 @@ export function groupMetadata(raw: Record<string, unknown>): Inspection {
         text = value.join(", ");
       else continue;
       const fields = groups[groupFor(key)].fields;
-      const label = key
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .replaceAll("_", " ");
+      const label = LABELS[key] ?? humanize(key);
       if (
         !fields.some((field) => field.label === label && field.value === text)
       )

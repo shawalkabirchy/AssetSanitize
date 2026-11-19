@@ -30,6 +30,12 @@ export type ImageEntry = {
   error?: string;
 };
 
+export type QueueProgress = {
+  operation: WorkerRequest["operation"];
+  total: number;
+  completed: number;
+};
+
 function release(entry: ImageEntry) {
   if (entry.sourceUrl) URL.revokeObjectURL(entry.sourceUrl);
   if (entry.resultUrl) URL.revokeObjectURL(entry.resultUrl);
@@ -39,6 +45,7 @@ export function useImageQueue() {
   const [entries, setEntries] = useState<ImageEntry[]>([]);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  const [progress, setProgress] = useState<QueueProgress | null>(null);
   const current = useRef<ImageEntry[]>([]);
   const working = useRef(false);
   const generation = useRef(0);
@@ -127,12 +134,19 @@ export function useImageQueue() {
     });
   }
 
-  async function run(ids: string[], operation: WorkerRequest["operation"]) {
-    if (working.current || !ids.length) return;
+  /** Resolves with how many of the given images finished successfully. */
+  async function run(
+    ids: string[],
+    operation: WorkerRequest["operation"],
+  ): Promise<number> {
+    if (working.current || !ids.length) return 0;
     working.current = true;
     setBusy(true);
     setNotice("");
     const token = ++generation.current;
+    let succeeded = 0;
+    let completed = 0;
+    setProgress({ operation, total: ids.length, completed });
     try {
       for (const id of ids) {
         if (token !== generation.current) break;
@@ -172,6 +186,7 @@ export function useImageQueue() {
               resultHeight: response.height,
             });
           }
+          succeeded++;
         } catch (error) {
           if (token !== generation.current) break;
           const known = error instanceof ImageError;
@@ -186,13 +201,16 @@ export function useImageQueue() {
               : {}),
           });
         }
+        setProgress({ operation, total: ids.length, completed: ++completed });
       }
     } finally {
       if (token === generation.current) {
         working.current = false;
         setBusy(false);
+        setProgress(null);
       }
     }
+    return succeeded;
   }
 
   function add(files: File[]) {
@@ -232,6 +250,7 @@ export function useImageQueue() {
     worker.current = null;
     working.current = false;
     setBusy(false);
+    setProgress(null);
     change((items) =>
       items.map((entry) =>
         ["queued", "inspecting", "ready", "processing", "verifying"].includes(
@@ -294,6 +313,7 @@ export function useImageQueue() {
   return {
     entries,
     busy,
+    progress,
     notice,
     setNotice,
     add,

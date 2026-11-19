@@ -11,7 +11,14 @@ import {
   stripReviewedEncoderMetadata,
   verifyPng,
 } from "../../src/lib/image-format";
-import { inspectMetadata } from "../../src/lib/metadata";
+import {
+  formatCoordinate,
+  groupMetadata,
+  humanize,
+  inspectMetadata,
+} from "../../src/lib/metadata";
+import { zipFiles } from "../../src/lib/zip";
+import { unzipSync } from "fflate";
 
 const fixture = (name: string) =>
   new Uint8Array(readFileSync(new URL(`../fixtures/${name}`, import.meta.url)));
@@ -141,6 +148,35 @@ describe("inspection outcomes", () => {
     );
     expect(JSON.stringify(inspection)).toContain("DEMO-SERIAL-0001");
   });
+  it("labels coordinates plainly and lists each one once", async () => {
+    const inspection = await inspectMetadata(fixture("gps-camera.jpg"));
+    const location = inspection.groups.find((group) => group.title === "Location");
+    expect(location?.fields).toEqual([
+      { label: "Latitude", value: "0° 0′ 0″ N" },
+      { label: "Longitude", value: "0° 0′ 0″ E" },
+    ]);
+    const labels = inspection.groups.flatMap((group) =>
+      group.fields.map((field) => field.label),
+    );
+    expect(labels).toEqual(
+      expect.arrayContaining(["Camera maker", "Serial number", "Taken"]),
+    );
+    expect(labels).not.toContain("latitude");
+    expect(JSON.stringify(inspection)).toContain("2026-01-15 10:30:00");
+    expect(inspection.count).toBe(labels.length);
+  });
+  it("formats coordinates, altitude and fallback labels", () => {
+    expect(formatCoordinate([23, 48, 36.123], "N")).toBe("23° 48′ 36.12″ N");
+    expect(formatCoordinate("23,48.6N", "N")).toBeUndefined();
+    expect(humanize("GPSLatitudeRef")).toBe("GPS latitude ref");
+    expect(humanize("color_space")).toBe("Color space");
+    const altitude = groupMetadata({
+      gps: { GPSAltitude: 12.34, GPSAltitudeRef: 1 },
+    });
+    expect(altitude.groups[0].fields).toEqual([
+      { label: "Altitude", value: "12.3 m below sea level" },
+    ]);
+  });
   it("distinguishes missing fields from parse failures", async () => {
     expect((await inspectMetadata(fixture("plain.png"))).outcome).toBe(
       "not-detected",
@@ -155,6 +191,20 @@ describe("inspection outcomes", () => {
     ).toContain("Demo PNG Author");
     expect(JSON.stringify(await inspectMetadata(fixture("xmp.jpg")))).toContain(
       "Demo XMP Author",
+    );
+  });
+});
+describe("download all", () => {
+  it("stores each PNG unchanged under its generic name with a fixed date", async () => {
+    const png = fixture("plain.png");
+    const archive = await zipFiles([
+      { name: "cleaned-01.png", blob: new Blob([png]) },
+      { name: "cleaned-02.png", blob: new Blob([png]) },
+    ]);
+    const files = unzipSync(new Uint8Array(await archive.arrayBuffer()));
+    expect(Object.keys(files)).toEqual(["cleaned-01.png", "cleaned-02.png"]);
+    expect(Buffer.from(files["cleaned-02.png"]).equals(Buffer.from(png))).toBe(
+      true,
     );
   });
 });

@@ -17,5 +17,7 @@ test("keyboard completes the sample, clean, download and clear workflow", async 
   const clear = page.getByRole("button", { name: "Clear all", exact: true });
   await clear.focus(); await page.keyboard.press("Enter");
   await expect(page.locator(".queue-item")).toHaveCount(0);
-  await expect(page.getByText("A closer look at your image.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Drop JPEG or PNG images here" })).toBeVisible();
+  // The visible button, not the hidden file input that shares its label.
+  await expect(page.locator('.upload-actions [data-slot="button"]', { hasText: "Choose images" })).toBeFocused();
 });
