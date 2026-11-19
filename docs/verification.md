@@ -92,3 +92,14 @@ Branch `ui-ux-refresh`. The changes are described in [design.md](design.md#revis
   - The h1 check wants a category noun; the owner chose "Remove EXIF and GPS data from photos".
 - **Next.js upgrade:** on 16.4.3, `npm run build` wrote `out/` and then exited with code 1 (`SecurityFatalError`) because of a published advisory concerning `use cache`, which this app does not use. Next was upgraded to **16.4.6** at the owner's request. The build now exits 0. `npm audit --omit=dev` reports 0 vulnerabilities. TypeScript, all 21 unit tests and the browser suite (55 passed, 1 skipped as above) were re-run on the upgraded build.
 - **Dev dependency:** `serve`, the local preview and test server, went from 14.2.6 to **14.2.8** to clear a `compression` advisory. It is not part of the published site. The full `npm audit`, development dependencies included, now reports 0 vulnerabilities, and the browser suite passed again through the new `serve`.
+
+## Production release — 19 November 2026
+
+The UI/UX revision, the Next.js 16.4.6 upgrade and the `serve` 14.2.8 bump reached `main` as a fast-forward to `20d8a18` and were pushed.
+
+- **Cloudflare Pages built and deployed the push on its own.** The "Cloudflare Pages" check on `20d8a18` completed with *Deploy successful* (deployment `5bf85a84`, preview `https://5bf85a84.assetsanitize.pages.dev`). The Git integration that had stopped producing builds is working again.
+- **Both hosts serve the new build:** `https://assetsanitize.consolelog.studio/` and `https://assetsanitize.pages.dev/` return 200 with the new headline and the same security headers as before: CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`.
+- The self-hosted IBM Plex Sans font (`font/woff2`) and the synthetic sample (`image/jpeg`) return 200 from the production origin.
+- **Browser suite against the live custom domain** (`BASE_URL=https://assetsanitize.consolelog.studio`): **55 passed, 1 skipped**. The skip is the scripted clipboard paste in Firefox, explained above. This run is the one that checks the new fonts, result thumbnails (`blob:` images) and Download all under the production Content Security Policy, which the local preview server does not apply.
+
+Not covered: real Safari on macOS or iOS, as in earlier releases.
