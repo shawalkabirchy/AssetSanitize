@@ -57,3 +57,14 @@ The existing suite was run with `BASE_URL=https://assetsanitize.pages.dev` and `
 Favicon, synthetic sample, license notices, application chunks, and worker chunks loaded successfully from the production origin. The separate Browser plugin was unavailable, so the existing Playwright workflow provided automation and screenshots.
 
 Known limits: actual Safari remains unverified. Input caps cannot guarantee available memory. Canvas reconstruction can increase size and change bit-depth/color interpretation. No anonymity, secure-erasure, certification, or visible-redaction claim is made.
+
+## Custom domain check — 19 November 2026
+
+`https://assetsanitize.consolelog.studio/` was added as a custom domain on the existing `assetsanitize` Pages project and checked from this machine after it went live:
+
+- HTTPS 200 with a valid certificate, `Server: cloudflare`, and the page title "AssetSanitize — private image metadata cleaner".
+- The same security headers as the provider address: CSP, `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, and disabled camera/microphone/geolocation permissions.
+- Favicon (`image/svg+xml`), synthetic sample (`image/jpeg`) and license notices (`text/plain`) returned 200.
+- The HTML is byte-identical to `https://assetsanitize.pages.dev/` (same SHA-256), so both hosts serve the same deployment.
+
+The 35-check browser suite was not rerun against the custom domain.

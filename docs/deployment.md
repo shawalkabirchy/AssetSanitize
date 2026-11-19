@@ -1,12 +1,16 @@
 # Cloudflare Pages release
 
-The application exports a static `out/` directory. It has no Pages Functions, Workers API, D1 binding, or secrets. Hosting target: Cloudflare Pages Free and its provider subdomain.
+The application exports a static `out/` directory. It has no Pages Functions, Workers API, D1 binding, or secrets. Hosting target: Cloudflare Pages Free, served on the custom domain `assetsanitize.consolelog.studio` and the provider subdomain.
 
 ## Production site
 
-Published on 26 October 2026 (Asia/Dhaka), after the owner requested deployment. Production URL: **https://assetsanitize.pages.dev/**. Cloudflare project: `assetsanitize`.
+Published on 26 October 2026 (Asia/Dhaka), after the owner requested deployment. Production URL: **https://assetsanitize.consolelog.studio/** (custom domain, added 19 November 2026). The provider address https://assetsanitize.pages.dev/ serves the same site. Cloudflare project: `assetsanitize`.
 
 The connected Cloudflare plugin created the project and linked the existing public GitHub repository. The separate saved Wrangler login was left unchanged. No paid resources, application server, Pages Functions, analytics integration, or secrets were added.
+
+## Custom domain
+
+`consolelog.studio` uses Cloudflare nameservers. `assetsanitize.consolelog.studio` was added in the Pages project under **Custom domains**, which points it at `assetsanitize.pages.dev` and issues its TLS certificate. The site needs no code or header changes for the domain: its CSP only allows its own origin, whichever host serves it.
 
 ## Automatic deployment
 

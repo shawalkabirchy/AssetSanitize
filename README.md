@@ -4,7 +4,7 @@
 
 - Source: [shawalkabirchy/AssetSanitize](https://github.com/shawalkabirchy/AssetSanitize)
 - Studio: [consolelog.studio](https://consolelog.studio/)
-- Live demo: [assetsanitize.pages.dev](https://assetsanitize.pages.dev/). See [deployment](docs/deployment.md) for build settings and release instructions.
+- Live demo: [assetsanitize.consolelog.studio](https://assetsanitize.consolelog.studio/). See [deployment](docs/deployment.md) for build settings and release instructions.
 - [Case study](docs/case-study.md) · [Verification](docs/verification.md) · [LinkedIn drafts](docs/linkedin-drafts.md)
 
 ## Run locally

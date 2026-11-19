@@ -12,7 +12,7 @@ The boundary matters: metadata cleanup does not hide text, faces, or addresses v
 
 If your team shares image assets, where does this check fit into your handoff today?
 
-Visual: desktop-inspection.png. This draft describes the project during development; the verified public demo is now available at https://assetsanitize.pages.dev/.
+Visual: desktop-inspection.png. This draft describes the project during development; the verified public demo is now available at https://assetsanitize.consolelog.studio/.
 
 ## 2. Build decision
 
@@ -38,7 +38,7 @@ The case study covers the practical details: orientation, transparency, cancella
 
 A deliberate limit: visible identifying content remains, and the new PNG can be larger than the original.
 
-Try the synthetic sample: https://assetsanitize.pages.dev/.
+Try the synthetic sample: https://assetsanitize.consolelog.studio/.
 Read the source: https://github.com/shawalkabirchy/AssetSanitize
 
 If your team has a file handoff that needs fewer manual checks, we'd be interested in how you handle it today.
