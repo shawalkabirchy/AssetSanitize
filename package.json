@@ -41,7 +41,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "exifreader": "4.52.0",
-    "serve": "14.2.6",
+    "serve": "14.2.8",
     "sharp": "0.35.5",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2",
