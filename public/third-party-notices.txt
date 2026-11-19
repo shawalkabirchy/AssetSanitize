@@ -607,13 +607,13 @@ third-party archives.
 
 
 ========================================================================
-@next/env@16.4.3
+@next/env@16.4.6
 License: MIT
 Source: https://www.npmjs.com/package/@next/env
 
 
 ========================================================================
-@next/swc-win32-x64-msvc@16.4.3
+@next/swc-win32-x64-msvc@16.4.6
 License: MIT
 Source: https://www.npmjs.com/package/@next/swc-win32-x64-msvc
 
@@ -4163,7 +4163,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ========================================================================
-next@16.4.3
+next@16.4.6
 License: MIT
 
 --- license.md ---
